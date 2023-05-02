@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BlackJack</title>
+  <style>
+    body {
+      font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+      background: green;
+      object-fit: cover;
+      font-weight: bold;
+      text-align: center;
+      color: white;
+    }
+
+    h1 {
+      color: goldenrod;
+    }
+
+    button {
+      color: #016f32;
+      font-weight: bold;
+      width: 150px;
+      background-color: goldenrod;
+      border: none;
+      padding-top: 3px;
+      padding-bottom: 3px;
+      border-radius: 2px;
+      margin-bottom: 4px;
+    }
+
+    #message-el {
+      font-style: italic;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>BlackJack</h1>
+  <p id="message-el">Want to play a round?</p>
+  <p id="card-el">Cards: </p>
+  <p id="sum-el">sum: </p>
+  <button id="startbtn" onclick="startgame()">START GAME</button><br>
+  <button id="newcardbtn" onclick="newcard()">NEW CARD</button>
+  <p id="person-el"></p>
+
+  <script>
+    let isalive = false, hasblackjack = false, message;
+    let cards = [];
+    let sum = 0;
+
+    let player = {
+      name: 'John',
+      chips: 145
+    };
+    let playerEl = document.getElementById('person-el');
+    playerEl.textContent = player.name + ': $' + player.chips;
+
+    let messageEl = document.getElementById('message-el');
+    // let sumEl = document.getElementById('sum-el');
+    let sumEl = document.querySelector("#sum-el");
+    let cardEl = document.querySelector("#card-el");
+
+    function startgame() {
+      isalive = true
+      firstcard = getrandomcard()
+      secondcard = getrandomcard()
+      cards = [firstcard, secondcard]
+      sum = firstcard + secondcard
+      rendergame()
+    };
+
+    function rendergame() {
+      sumEl.textContent = 'Sum is: ' + sum;
+      cardEl.textContent = 'Cards: ';
+      for (let i = 0; i < cards.length; i++) {
+        cardEl.textContent += cards[i] + " "
+      }
+      if (sum < 21) {
+        message = "Do you want to draw a new card ?"
+      } else if (sum === 21) {
+        message = "You have got BlackJack !"
+        hasblackjack = true
+      } else {
+        message = "You are out of game !"
+        isalive = false
+      }
+      messageEl.textContent = message
+    };
+
+    function getrandomcard() {
+      let randomnumber = Math.floor((Math.random() * 13) + 1);
+      if (randomnumber > 10) {
+        return 10
+      } else if (randomnumber === 1) {
+        return 11
+      } else {
+        return randomnumber
+      }
+    };
+
+    function newcard() {
+      if (isalive === true && hasblackjack === false) {
+        let thirdcard = getrandomcard()
+        cards.push(thirdcard)
+        sum += thirdcard
+        rendergame()
+      }
+    };
+  </script>
+</body>
+
+</html>
